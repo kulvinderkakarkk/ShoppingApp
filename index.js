@@ -4,14 +4,15 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from '@apollo/server/standalone';
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers/index.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config()
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers,
-    context: ({req})=>({req})
+    resolvers
 })
+
 mongoose
   .connect(process.env.MONGO_URI, {
     // useNewUrlParser: true,
@@ -21,6 +22,7 @@ mongoose
   .then(async (resp) => {
     console.log("Mongo is running")
     const { url } = await startStandaloneServer(server, {
+      context: async ({ req }) => ({token: req.headers.authorization?req.headers.authorization:''}),
         listen: { port: 4000 },
       });
       

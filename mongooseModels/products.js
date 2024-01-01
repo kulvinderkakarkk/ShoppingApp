@@ -1,10 +1,9 @@
 import {model, Schema} from 'mongoose'
-import reviews from './reviews'
 
 const products = new Schema({
+    'name': String,
     'description': String,
     'price': Number,
-    'reviews': [reviews],
     'image_path': String
 })
 
